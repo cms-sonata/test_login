@@ -1,0 +1,26 @@
+security:
+    encoders:
+         App\Entity\Users: 'auto'
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+         database_users:
+            entity: { class: App\Entity\Users, property: login }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            form_login:
+                check_path: index
+                login_path: index
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: admin_index
+                username_parameter: login
+                password_parameter: password
+
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
